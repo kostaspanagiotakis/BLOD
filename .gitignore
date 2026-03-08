@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Venv
+venv/
+ENV/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# Data (common patterns – adjust as needed)
+*.csv
+*.tsv
+*.h5
+*.npy
+*.npz
+*.pt
+*.pth
+*.pickle
+*.pkl
+
+# IDE
+.vscode/
+.idea/
