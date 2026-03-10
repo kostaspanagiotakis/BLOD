@@ -21,7 +21,7 @@ from torchvision.utils import make_grid
 # Local imports
 from blodlib.vp_schedule import VPSchedule
 from blodlib.plot import save_image_grid, save_pixel_hist, save_forward_diffusion_images, save_loss_curve
-from blodlib.models import ScoreNetMNIST, make_batch_mnist
+from blodlib.models import UNetScoreMNIST, make_batch_mnist
 from blodlib.training import train_score_mnist
 from blodlib.samplers import sample_reverse_vp, reverse_svgd
 from blodlib.mnist import get_mnist_loader, sample_x0_from_mnist, tensor_to_img
@@ -81,7 +81,7 @@ def main():
     # ----------------------------
     # Model
     # ----------------------------
-    net = ScoreNetMNIST(dim=28 * 28, hidden=1024, temb_dim=64).to(device)
+    net = UNetScoreMNIST(base_ch=64, temb_dim=128).to(device)
 
     # Wrap make_batch_mnist so it matches the train_score_mnist signature:
     # make_batch_fn(x0_all, batch_size) -> x_t, t, target, lam
@@ -105,7 +105,7 @@ def main():
         x0_all=x0_all,
         make_batch_fn=make_batch_fn,
         steps=5000,              # try 2000 for quick test, 10000-30000 for serious run
-        batch_size=256,
+        batch_size=512,
         lr=2e-4,
         print_every=200,
         clip=1.0,

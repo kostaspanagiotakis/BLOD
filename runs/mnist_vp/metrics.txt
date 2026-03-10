@@ -1,7 +1,7 @@
 train_samples:        60000
 dim:                  784
 training_steps:       5000
-elapsed_sec:          5.37
+elapsed_sec:          341.33
 device:               cuda
 lambda_weighted:      True
 model:                ScoreNetMNIST
