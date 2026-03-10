@@ -35,7 +35,7 @@ def mean_std(xs: list[float]) -> tuple[float, float]:
 
 def main():
     root = Path(__file__).resolve().parents[1]
-    run_dir = root / "runs" / ("bregman_1d_table_" + dt.datetime.now().strftime("%Y%m%d_%H%M%S"))
+    run_dir = root / "runs" / ("Bregman")
     run_dir.mkdir(parents=True, exist_ok=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

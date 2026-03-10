@@ -39,7 +39,7 @@ def save_all(prefix, folder):
 
 def main():
     root = Path(__file__).resolve().parents[1]
-    out = root / "runs" / "simple"
+    out = root / "runs" / "Bimodal"
     out.mkdir(parents=True, exist_ok=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

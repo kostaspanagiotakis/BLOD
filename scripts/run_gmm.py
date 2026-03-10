@@ -27,7 +27,7 @@ from blodlib.plot import (
 )
 from blodlib.training import train
 from blodlib.samplers import sample_reverse_vp, reverse_svgd
-from blodlib.gmm import gmm_sum_mean_logp, sample_1d_gmm
+from blodlib.gmm import independent_gmms_sum_mean_logp, sample_1d_gmm
 
 
 def save_all(prefix, folder):
@@ -162,11 +162,11 @@ def main():
     xs_svgd = reverse_svgd(
         net,
         N=3000,
-        steps=10000,
+        steps=3000,
         inner=5,
-        lr=0.15,
+        lr=0.5,
         T=1.0,
-        eps_t=1e-3,
+        eps_t=1e-1,
         device=device,
         dim=D,
     )
@@ -184,19 +184,23 @@ def main():
     )
     save_all("per_dim_svgd", out)
 
-    # # ----- Likelihood comparison -----
-    # # New: pass per-dim params to score joint (independent dims) likelihood
-    # _, ll_diff = gmm_sum_mean_logp(xs, params_per_dim=gmm_params)
-    # _, ll_svgd = gmm_sum_mean_logp(xs_svgd, params_per_dim=gmm_params)
+    # ----- Likelihood comparison -----
+    # Score joint log p(x) under the known independent per-dimension GMMs
+    sum_ll_diff, ll_diff = independent_gmms_sum_mean_logp(xs, gmm_params)
+    sum_ll_svgd, ll_svgd = independent_gmms_sum_mean_logp(xs_svgd, gmm_params)
 
-    # (out / "metrics.txt").write_text(
-    #     f"Reverse VP mean logp: {ll_diff:.6f}\n"
-    #     f"SVGD mean logp:      {ll_svgd:.6f}\n"
-    #     f"loss_steps:          {len(losses)}\n"
-    #     f"D:                   {D}\n"
-    # )
+    (out / "metrics.txt").write_text(
+        f"Reverse VP sum logp:  {sum_ll_diff:.6f}\n"
+        f"Reverse VP mean logp: {ll_diff:.6f}\n"
+        f"SVGD sum logp:        {sum_ll_svgd:.6f}\n"
+        f"SVGD mean logp:       {ll_svgd:.6f}\n"
+        f"loss_steps:           {len(losses)}\n"
+        f"D:                    {D}\n"
+    )
 
-    # print("Done. Saved to:", out)
+    print(f"Reverse VP mean logp: {ll_diff:.6f}")
+    print(f"SVGD mean logp:       {ll_svgd:.6f}")
+    print("Done. Saved to:", out)
 
 
 if __name__ == "__main__":

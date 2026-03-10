@@ -6,8 +6,8 @@
 #SBATCH --cpus-per-task=8          # host-side threads for BLAS/data prep
 #SBATCH --mem=64G                   # keep as in your original (raise if needed)
 #SBATCH --time=00:60:00            # keep 5 minutes (raise if needed)
-#SBATCH --output=logs/blod_1d_%j.out
-#SBATCH --error=logs/blod_1d_%j.err
+#SBATCH --output=logs/bimodal_%j.out
+#SBATCH --error=logs/bimodal_%j.err
 
 set -euo pipefail
 

@@ -1,0 +1,6 @@
+Reverse VP sum logp:  -67628.085938
+Reverse VP mean logp: -22.542696
+SVGD sum logp:        -60464.386719
+SVGD mean logp:       -20.154795
+loss_steps:           2000
+D:                    10
