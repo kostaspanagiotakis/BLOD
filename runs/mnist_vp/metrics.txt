@@ -1,0 +1,8 @@
+train_samples:        60000
+dim:                  784
+training_steps:       5000
+elapsed_sec:          5.37
+device:               cuda
+lambda_weighted:      True
+model:                ScoreNetMNIST
+note:                 Uses sinusoidal time embedding + MNIST-specific batching.

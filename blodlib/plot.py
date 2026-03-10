@@ -1,23 +1,3 @@
-"""
-blod_plots.py
-
-Plot utilities for BLOD / VP diffusion experiments.
-
-Provides:
-- plot_data_hist
-- plot_forward_diffusion
-- plot_samples_vs_data
-- plot_samples_vs_data_per_dim
-- VPPlotter: optional convenience wrapper holding device/alpha/sigma/simulate_forward_em
-
-Usage:
-    from blod_plots import VPPlotter
-
-    plotter = VPPlotter(device=device, alpha=alpha, sigma=sigma, simulate_forward_em=simulate_forward_em)
-    plotter.plot_data_hist(x0_all)
-    plotter.plot_forward_diffusion(x0_all, mode="closed")
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,7 +6,8 @@ from types import SimpleNamespace
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-
+from torchvision.utils import make_grid
+from .mnist import tensor_to_img
 
 ArrayLike = Union[np.ndarray, torch.Tensor, Sequence[float]]
 
@@ -445,6 +426,89 @@ def plot_per_dim_comparison(
         fig.tight_layout(rect=(0, 0, 1, 0.96))
     return fig, axes
 
+
+############ MNIST ###########
+# ----------------------------
+# Plot / save helpers
+# ----------------------------
+def save_loss_curve(losses, path: Path):
+    plt.figure(figsize=(6, 4))
+    plt.plot(losses, lw=1.5)
+    plt.xlabel("step")
+    plt.ylabel("loss")
+    plt.title("Training loss")
+    plt.tight_layout()
+    plt.savefig(path, dpi=150)
+    plt.close()
+
+def save_image_grid(x: torch.Tensor, path: Path, nrow: int = 8, title: str | None = None):
+    """
+    Save a grid of MNIST images. Input expected in [-1,1].
+    x: (N,784) or (N,1,28,28) or (N,28,28)
+    """
+    x_vis = tensor_to_img(x).detach().cpu()
+    grid = make_grid(x_vis, nrow=nrow, padding=2)
+
+    plt.figure(figsize=(nrow, nrow))
+    if title is not None:
+        plt.title(title)
+    plt.axis("off")
+    plt.imshow(grid.permute(1, 2, 0).squeeze(-1), cmap="gray", vmin=0.0, vmax=1.0)
+    plt.tight_layout()
+    plt.savefig(path, dpi=150)
+    plt.close()
+
+def save_pixel_hist(x0_all: torch.Tensor, path: Path, bins: int = 80,
+                    title: str = "Pixel histogram (MNIST, scaled to [-1,1])"):
+    x = x0_all.detach().cpu().numpy().ravel()
+    plt.figure(figsize=(7, 4))
+    plt.hist(x, bins=bins, density=True, alpha=0.8, color="tab:blue")
+    plt.title(title)
+    plt.xlabel("pixel value")
+    plt.ylabel("density")
+    plt.tight_layout()
+    plt.savefig(path, dpi=150)
+    plt.close()
+
+
+@torch.no_grad()
+def save_forward_diffusion_images(
+    x0_all: torch.Tensor,
+    alpha,
+    sigma,
+    path: Path,
+    check_times=(0.0, 0.05, 0.2, 0.5, 1.0),
+    nshow: int = 16,
+):
+    """
+    Visualize forward corruption x_t = a(t)x0 + s(t)z at a few times.
+    x0_all: (N,784) in [-1,1]
+    Saves one image where each row corresponds to a diffusion time.
+    """
+    idx = torch.randint(0, x0_all.size(0), (nshow,), device=x0_all.device)
+    x0 = x0_all[idx]  # (nshow,784)
+    z = torch.randn_like(x0)
+
+    panels = []
+    for tval in check_times:
+        tt = torch.full((nshow,), float(tval), device=x0.device, dtype=x0.dtype)
+        a = alpha(tt)[:, None]
+        s = sigma(tt)[:, None]
+        xt = a * x0 + s * z
+        panels.append(xt.view(nshow, 1, 28, 28))
+
+    # stack vertically so each row is one time
+    stacked = torch.cat(panels, dim=0)  # (len(times)*nshow,1,28,28)
+    x_vis = tensor_to_img(stacked).cpu()
+    grid = make_grid(x_vis, nrow=nshow, padding=2)
+
+    plt.figure(figsize=(nshow, len(check_times) * 1.5))
+    plt.title("Forward diffusion snapshots (rows are times)")
+    plt.axis("off")
+    plt.imshow(grid.permute(1, 2, 0).squeeze(-1), cmap="gray", vmin=0.0, vmax=1.0)
+    plt.tight_layout()
+    plt.savefig(path, dpi=150)
+    plt.close()
 
 # ---------- Optional Convenience Wrapper ----------
 

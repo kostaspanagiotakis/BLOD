@@ -17,8 +17,9 @@ def make_batch(
       target score = -z / max(s(t), eps_sigma)
       lam = s(t)^2
     """
-    idx = torch.randint(x0_pool.size(0), (B,), device=device)
-    x0 = x0_pool[idx].to(device)
+    idx = torch.randint(x0_pool.size(0), (B,), device=x0_pool.device)
+    x0 = x0_pool[idx].to(device, non_blocking=True)
+
 
     if x0.dim() == 1:
         x0 = x0[:, None]  # (B,1)
