@@ -162,15 +162,16 @@ def main():
     xs_svgd = reverse_svgd(
         net,
         N=3000,
-        steps=2000,
+        steps=10000,
         inner=5,
-        lr=0.5,
+        lr=0.15,
         T=1.0,
-        eps_t=1e-1,
+        eps_t=1e-3,
         device=device,
         dim=D,
     )
 
+    print("x0_all:", tuple(x0_all.shape), "xs_svgd:", tuple(xs_svgd.shape))
     # ---- SVGD marginals (Data vs SVGD) ----
     plot_per_dim_comparison(
         X_data=x0_all,

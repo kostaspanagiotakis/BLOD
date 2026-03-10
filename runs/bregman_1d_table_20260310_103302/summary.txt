@@ -1,0 +1,11 @@
+GMM mean logp comparison (higher is better)
+device=cuda  NRUNS=10  train_steps=3000  sample_steps=1000
+
+loss                 mean          std
+--------------------------------------
+bernoulli       -1.865444     0.045661
+squared         -1.913025     0.044361
+normal          -1.921220     0.051482
+poisson         -2.031698     0.112513
+beta         -72700.983789 75645.839543
+weibull      -83291.572656 146670.886666
