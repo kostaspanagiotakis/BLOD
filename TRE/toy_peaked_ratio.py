@@ -50,7 +50,7 @@ def fit_theta(loss_fn, center, width, n_grid=3000):
 
 # -----------------------------
 # Data generation
-# -----------------------------
+# ----------------------------- 
 
 def sample_endpoints(seed, sigma_p, sigma_q, n):
     rng = np.random.default_rng(seed)
