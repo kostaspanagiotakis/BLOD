@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16G
 #SBATCH --time=00:10:00
-#SBATCH --output=logs/1d_tre_%j.out
-#SBATCH --error=logs/1d_tre_%j.err
+#SBATCH --output=logs/run_mi_breg%j.out
+#SBATCH --error=logs/run_mi_breg%j.err
 
 set -euo pipefail
 
@@ -30,4 +30,4 @@ print('python executable:', sys.executable)
 print('numpy version:', np.__version__)
 PY
 
-python -u run_1d.py
+python -u run_mi_breg.py

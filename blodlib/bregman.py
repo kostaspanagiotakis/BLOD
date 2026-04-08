@@ -55,10 +55,9 @@ def grad_weibull(th, eps=1e-8):
 
 # Registry: pick by name
 BREGMAN = {
-    "squared":   (F_squared,   grad_squared),
-    "bernoulli": (F_bernoulli, grad_bernoulli),
-    "poisson":   (F_poisson,   grad_poisson),
-    "normal":    (F_normal,    grad_normal),
-    "beta":      (F_beta,      grad_beta),
-    "weibull":   (F_weibull,   grad_weibull),
+    "squared":     (F_squared,     grad_squared),
+    "bernoulli":   (F_bernoulli,   grad_bernoulli),
+    "poisson":     (F_poisson,     grad_poisson),
+    "beta":        (F_beta,        grad_beta),
+    "weibull":     (F_weibull,     grad_weibull),
 }

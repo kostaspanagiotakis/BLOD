@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16G
 #SBATCH --time=00:10:00
-#SBATCH --output=logs/toy_1d_tre_%j.out
-#SBATCH --error=logs/toy_1d_tre_%j.err
+#SBATCH --output=logs/run_one_d_%j.out
+#SBATCH --error=logs/run_one_d_%j.err
 
 set -euo pipefail
 
@@ -30,4 +30,4 @@ print('python executable:', sys.executable)
 print('numpy version:', np.__version__)
 PY
 
-python -u run_1d_peaked.py
+python -u run_one_d.py
