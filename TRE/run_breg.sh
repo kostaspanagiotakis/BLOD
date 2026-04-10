@@ -4,9 +4,9 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=16G
-#SBATCH --time=00:10:00
-#SBATCH --output=logs/run_mi%j.out
-#SBATCH --error=logs/run_mi%j.err
+#SBATCH --time=24:00:00
+#SBATCH --output=logs/run_breg_%j.out
+#SBATCH --error=logs/run_breg%j.err
 
 set -euo pipefail
 
@@ -30,4 +30,4 @@ print('python executable:', sys.executable)
 print('numpy version:', np.__version__)
 PY
 
-python -u run_mi.py
+python -u run_breg.py
